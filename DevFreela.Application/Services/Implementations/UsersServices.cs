@@ -23,6 +23,7 @@ namespace DevFreela.Application.Services.Implementations
         {
             var users = new User(inputModel.FullName, inputModel.Email, inputModel.BirthDate);
             _dbContext.Users.Add(users);
+            _dbContext.SaveChanges();
             return users.Id;
 
         }
@@ -31,6 +32,7 @@ namespace DevFreela.Application.Services.Implementations
         {
             var user = _dbContext.Users.SingleOrDefault(u => u.Id == Id);
             user.Active = false;
+            _dbContext.SaveChanges();
         }
 
         public List<UsersViewModel> GetAll()

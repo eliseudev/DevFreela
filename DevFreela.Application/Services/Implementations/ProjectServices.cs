@@ -22,6 +22,7 @@ namespace DevFreela.Application.Services.Implementations
         {
             var project = new Project(inputModel.Title, inputModel.Description, inputModel.IdCliente, inputModel.IdFreelancer, inputModel.TotalCost);
             _dbContext.Projects.Add(project);
+            _dbContext.SaveChanges();
             return project.Id;
         }
 
@@ -29,18 +30,21 @@ namespace DevFreela.Application.Services.Implementations
         {
             var comment = new ProjectComment(comentInputModel.Content, comentInputModel.IdProject, comentInputModel.IdUser);
             _dbContext.ProjectComments.Add(comment);
+            _dbContext.SaveChanges();
         }
 
         public void Delete(int Id)
         {
             var project = _dbContext.Projects.SingleOrDefault(p => p.Id == Id);
             project.Cancel();
+            _dbContext.SaveChanges();
         }
 
         public void Finish(int Id)
         {
             var project = _dbContext.Projects.SingleOrDefault(p => p.Id == Id);
             project.Finish();
+            _dbContext.SaveChanges();
         }
 
         public List<ProjectViewModel> GetAll(string query)
@@ -75,6 +79,7 @@ namespace DevFreela.Application.Services.Implementations
         {
             var project = _dbContext.Projects.SingleOrDefault(p => p.Id == updateModel.Id);
             project.Update(project.Title, project.Description, project.TotalCost);
+            _dbContext.SaveChanges();
         }
     }
 }
