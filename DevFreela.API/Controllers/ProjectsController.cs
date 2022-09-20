@@ -1,9 +1,14 @@
 ﻿using DevFreela.API.Models;
+using DevFreela.Application.Commands.CreateComent;
+using DevFreela.Application.Commands.CreateProject;
+using DevFreela.Application.Commands.DeleteProject;
 using DevFreela.Application.InputModel;
 using DevFreela.Application.Services.Implementations;
 using DevFreela.Application.Services.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace DevFreela.API.Controllers
 {
@@ -11,10 +16,12 @@ namespace DevFreela.API.Controllers
     public class ProjectsController : ControllerBase
     {
         private readonly IProjectServices _projectServices;
+        private readonly IMediator _mediator;
 
-        public ProjectsController(IProjectServices projectServices)
+        public ProjectsController(IProjectServices projectServices, IMediator mediator)
         {
             _projectServices = projectServices;
+            _mediator = mediator;
         }
 
         [HttpGet]
@@ -28,24 +35,25 @@ namespace DevFreela.API.Controllers
         public IActionResult GetById(int Id)
         {
             var project = _projectServices.GetById(Id);
-            return Ok(project);    
+            return Ok(project);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] NewProjectInputModel inputModel)
+        public async Task<IActionResult> Post([FromBody] CreateProjectCommand command)
         {
-            if(inputModel.Title.Length > 50)
+            if (command.Title.Length > 50)
             {
-                return BadRequest();
+                return BadRequest("O Titulo não pode conter mais de 50 caracteres");
             }
-            var id = _projectServices.Create(inputModel);
-            return AcceptedAtAction(nameof(GetById), new { Id = id }, inputModel);
+            //var id = _projectServices.Create(inputModel);
+            var id = await _mediator.Send(command);
+            return AcceptedAtAction(nameof(GetById), new { Id = id }, command);
         }
 
         [HttpPut("{Id}")]
-        public IActionResult Put(int Id, [FromBody]UpdateProjectInputModel model)
+        public IActionResult Put(int Id, [FromBody] UpdateProjectInputModel model)
         {
-            if(model.Description.Length > 200)
+            if (model.Description.Length > 200)
             {
                 return BadRequest();
             }
@@ -55,17 +63,18 @@ namespace DevFreela.API.Controllers
 
         //api/projects/
         [HttpDelete("{Id}")]
-        public IActionResult Delete(int Id)
+        public async Task<IActionResult> Delete(int Id)
         {
-            _projectServices.Delete(Id);
+            var command = new DeleteProjectCommand(Id);
+            await _mediator.Send(command);
             return NoContent();
         }
 
         //api/projects/1/comments
         [HttpPost("{Id}/comments")]
-        public IActionResult PostComent(int Id, [FromBody] CreateCommentInputModel model)
+        public async Task<IActionResult> PostComent(int Id, [FromBody] CreateComentCommand command)
         {
-            _projectServices.CreateComment(model);
+            await _mediator.Send(command);
             return NoContent();
         }
 

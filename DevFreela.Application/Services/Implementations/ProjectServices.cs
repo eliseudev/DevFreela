@@ -24,20 +24,6 @@ namespace DevFreela.Application.Services.Implementations
             _dbContext = dbContext;
             _connectionString = configuration.GetConnectionString("DevFreelaCs");
         }
-        public int Create(NewProjectInputModel inputModel)
-        {
-            var project = new Project(inputModel.Title, inputModel.Description, inputModel.IdCliente, inputModel.IdFreelancer, inputModel.TotalCost);
-            _dbContext.Projects.Add(project);
-            _dbContext.SaveChanges();
-            return project.Id;
-        }
-
-        public void CreateComment(CreateCommentInputModel comentInputModel)
-        {
-            var comment = new ProjectComment(comentInputModel.Content, comentInputModel.IdProject, comentInputModel.IdUser);
-            _dbContext.ProjectComments.Add(comment);
-            _dbContext.SaveChanges();
-        }
 
         public void Delete(int Id)
         {
