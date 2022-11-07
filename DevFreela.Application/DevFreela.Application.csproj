@@ -15,6 +15,22 @@
 
   <ItemGroup>
     <Folder Include="Queries\GetAllSkills\" />
+    <Folder Include="Commands\UpdateProject\" />
+    <Folder Include="Commands\StartProject\" />
+    <Folder Include="Commands\FinishProject\" />
+    <Folder Include="Queries\GetAllSkills\" />
+    <Folder Include="Queries\GetAllProject\" />
+    <Folder Include="Queries\GetUser\" />
+    <Folder Include="Queries\GetById\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Commands\UpdateProject\" />
+    <None Remove="Commands\StartProject\" />
+    <None Remove="Commands\FinishProject\" />
+    <None Remove="Queries\GetAllSkills\" />
+    <None Remove="Queries\GetAllProject\" />
+    <None Remove="Queries\GetUser\" />
+    <None Remove="Queries\GetById\" />
+  </ItemGroup>
 </Project>

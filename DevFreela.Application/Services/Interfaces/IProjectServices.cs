@@ -12,9 +12,7 @@ namespace DevFreela.Application.Services.Interfaces
     {
         List<ProjectViewModel> GetAll(string query);
         ProjectDetailsViewModel GetById(int Id);
-        void Update(UpdateProjectInputModel updateModel);
         void Delete(int Id);
-        void Start(int Id);
         void Finish(int Id);
     }
 }
